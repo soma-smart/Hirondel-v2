@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Hirondel — Dataiku Explorer{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/">&#127893; Hirondel</a>
+    <span class="nav-sub">Dataiku Pipeline Explorer</span>
+  </nav>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <small>Hirondel v2 &mdash; Dataiku DSS Explorer</small>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

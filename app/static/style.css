@@ -1,0 +1,98 @@
+/* =========================================================
+   Hirondel — Style principal
+   ========================================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #252836;
+  --border: #2e3348;
+  --text: #e2e8f0;
+  --text-muted: #8892a4;
+  --primary: #4e9af1;
+  --secondary: #f4a261;
+  --success: #48bb78;
+  --warning: #f6c90e;
+  --danger: #fc5c7d;
+  --radius: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+
+/* ----- Navbar ----- */
+.navbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; gap: 1rem; }
+.brand { color: var(--primary); font-size: 1.2rem; font-weight: 700; text-decoration: none; }
+.nav-sub { color: var(--text-muted); font-size: 0.85rem; }
+
+/* ----- Layout ----- */
+.container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+footer { text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); }
+
+/* ----- Breadcrumb ----- */
+.breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+.breadcrumb a { color: var(--primary); text-decoration: none; }
+
+/* ----- Titres ----- */
+.page-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+.section-title { font-size: 1.2rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+.subtitle { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+/* ----- Alerts ----- */
+.alert { padding: 1rem 1.25rem; border-radius: var(--radius); margin: 1rem 0; }
+.alert-error { background: rgba(252,92,125,0.12); border: 1px solid var(--danger); color: #fca5b8; }
+.alert-warn { background: rgba(246,201,14,0.10); border: 1px solid var(--warning); color: #fde68a; }
+
+/* ----- Boutons ----- */
+.btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 500; text-decoration: none; cursor: pointer; border: none; transition: opacity .15s; }
+.btn:hover { opacity: .85; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--secondary); color: #fff; }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+
+/* ----- Toolbar ----- */
+.toolbar { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.search-input { margin-left: auto; padding: .45rem .85rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: .9rem; min-width: 220px; }
+.search-input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+/* ----- Grille de cartes (projets) ----- */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin-top: 1rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
+.card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: .25rem; }
+.card-key { color: var(--text-muted); font-size: .85rem; margin-bottom: 1rem; }
+.card-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+
+/* ----- Stats Flow ----- */
+.flow-stats { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 1.5rem; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.5rem; display: flex; flex-direction: column; align-items: center; min-width: 110px; }
+.stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+.stat-label { font-size: .8rem; color: var(--text-muted); margin-top: .25rem; }
+
+/* ----- Graphe de flux ----- */
+.graph-container { width: 100%; height: 520px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 2rem; }
+
+/* ----- Tableau ----- */
+.data-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); overflow: hidden; font-size: .9rem; }
+.data-table th { background: var(--surface2); padding: .65rem 1rem; text-align: left; font-weight: 600; color: var(--text-muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+.data-table td { padding: .65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface2); }
+
+/* ----- Badges ----- */
+.badge { display: inline-block; padding: .2em .55em; border-radius: 4px; font-size: .78rem; font-weight: 600; }
+.badge-type { background: rgba(78,154,241,.18); color: var(--primary); }
+.badge-tag { background: rgba(244,162,97,.18); color: var(--secondary); margin-right: .25rem; }
+.badge-status { background: var(--surface2); color: var(--text-muted); }
+.badge-done, .badge-success { background: rgba(72,187,120,.18); color: var(--success); }
+.badge-running { background: rgba(246,201,14,.15); color: var(--warning); }
+.badge-failed { background: rgba(252,92,125,.18); color: var(--danger); }
+.badge-dataset { background: rgba(78,154,241,.15); color: var(--primary); }
+.badge-recipe { background: rgba(244,162,97,.15); color: var(--secondary); }
+
+/* ----- Colonnes schéma ----- */
+details summary { cursor: pointer; color: var(--primary); font-size: .85rem; }
+.col-list { margin: .5rem 0 0 1rem; list-style: disc; }
+.col-list li { font-size: .82rem; margin-bottom: .2rem; }
+.col-type { color: var(--text-muted); font-size: .78rem; }

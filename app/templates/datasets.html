@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Datasets — {{ project_key }} — Hirondel{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="/">Projets</a> / <strong>{{ project_key }}</strong> / Datasets
+</div>
+
+<h1 class="page-title">Datasets — {{ project_key }}</h1>
+
+<div class="toolbar">
+  <a class="btn btn-outline" href="/projects/{{ project_key }}/flow">&#127760; Voir le Flow</a>
+  <a class="btn btn-outline" href="/projects/{{ project_key }}/datasets/api" target="_blank">&#128196; JSON API</a>
+  <input class="search-input" id="searchInput" type="text" placeholder="Filtrer les datasets…" />
+</div>
+
+{% if not datasets %}
+<div class="alert alert-warn">Aucun dataset trouvé dans ce projet.</div>
+{% else %}
+<p class="subtitle">{{ datasets | length }} dataset(s)</p>
+
+<table class="data-table" id="datasetsTable">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Type</th>
+      <th>Dernier build</th>
+      <th>Lignes</th>
+      <th>Tags</th>
+      <th>Colonnes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ds in datasets %}
+    <tr>
+      <td><strong>{{ ds.name }}</strong></td>
+      <td><span class="badge badge-type">{{ ds.type }}</span></td>
+      <td>
+        <span class="badge badge-status badge-{{ ds.last_build_status | lower }}">
+          {{ ds.last_build_status }}
+        </span>
+      </td>
+      <td>{{ ds.record_count if ds.record_count is not none else "—" }}</td>
+      <td>
+        {% for tag in ds.tags %}
+        <span class="badge badge-tag">{{ tag }}</span>
+        {% endfor %}
+      </td>
+      <td>
+        <details>
+          <summary>{{ ds.schema_columns | length }} colonne(s)</summary>
+          <ul class="col-list">
+            {% for col in ds.schema_columns %}
+            <li><code>{{ col.name }}</code> <span class="col-type">{{ col.type }}</span></li>
+            {% endfor %}
+          </ul>
+        </details>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const input = document.getElementById("searchInput");
+  if (input) {
+    input.addEventListener("input", () => {
+      const q = input.value.toLowerCase();
+      document.querySelectorAll("#datasetsTable tbody tr").forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
+      });
+    });
+  }
+</script>
+{% endblock %}

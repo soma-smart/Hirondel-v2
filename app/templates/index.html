@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Projets — Hirondel{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Projets Dataiku</h1>
+
+{% if error %}
+<div class="alert alert-error">
+  <strong>Erreur de connexion :</strong> {{ error }}
+  <p>Vérifiez les variables <code>DATAIKU_HOST</code> et <code>DATAIKU_API_KEY</code> dans votre fichier <code>.env</code>.</p>
+</div>
+{% elif not projects %}
+<div class="alert alert-warn">Aucun projet accessible avec cette clé API.</div>
+{% else %}
+<p class="subtitle">{{ projects | length }} projet(s) trouvé(s). Choisissez un projet pour explorer ses pipelines.</p>
+
+<div class="card-grid">
+  {% for project in projects %}
+  <div class="card">
+    <h2 class="card-title">{{ project.name }}</h2>
+    <p class="card-key"><code>{{ project.key }}</code></p>
+    <div class="card-actions">
+      <a class="btn btn-primary" href="/projects/{{ project.key }}/flow">&#127760; Flow</a>
+      <a class="btn btn-secondary" href="/projects/{{ project.key }}/datasets">&#128196; Datasets</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

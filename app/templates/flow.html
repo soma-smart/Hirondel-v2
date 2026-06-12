@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Flow — {{ project_key }} — Hirondel{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="/">Projets</a> / <strong>{{ project_key }}</strong> / Flow
+</div>
+
+<h1 class="page-title">Flow — {{ project_key }}</h1>
+
+<div class="toolbar">
+  <a class="btn btn-outline" href="/projects/{{ project_key }}/datasets">&#128196; Voir les Datasets</a>
+  <a class="btn btn-outline" href="/projects/{{ project_key }}/flow/api" target="_blank">&#128196; JSON API</a>
+</div>
+
+<div class="flow-stats">
+  <div class="stat-card">
+    <span class="stat-value">{{ graph.nodes | length }}</span>
+    <span class="stat-label">Nœuds</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ graph.edges | length }}</span>
+    <span class="stat-label">Connexions</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ graph.nodes | selectattr("type", "equalto", "DATASET") | list | length }}</span>
+    <span class="stat-label">Datasets</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ graph.nodes | rejectattr("type", "equalto", "DATASET") | list | length }}</span>
+    <span class="stat-label">Recettes</span>
+  </div>
+</div>
+
+<!-- Visualisation du graphe avec vis-network -->
+<div id="flow-graph" class="graph-container"></div>
+
+<!-- Tableau des nœuds -->
+<h2 class="section-title">Nœuds du flow</h2>
+<input class="search-input" id="nodeSearch" type="text" placeholder="Filtrer les nœuds…" />
+<table class="data-table" id="nodesTable">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Type</th>
+      <th>Zone</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for node in graph.nodes %}
+    <tr>
+      <td><code>{{ node.id }}</code></td>
+      <td>{{ node.name }}</td>
+      <td><span class="badge badge-type badge-{{ node.type | lower }}">{{ node.type }}</span></td>
+      <td>{{ node.zone or "—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script>
+  // Données du graphe injectées depuis le template
+  const nodes = [
+    {% for node in graph.nodes %}
+    {
+      id: {{ loop.index }},
+      ref: "{{ node.id }}",
+      label: "{{ node.name }}",
+      group: "{{ node.type }}",
+      title: "Type: {{ node.type }}{% if node.zone %} | Zone: {{ node.zone }}{% endif %}",
+      shape: "{{ 'box' if node.type == 'DATASET' else 'ellipse' }}",
+      color: "{{ '#4e9af1' if node.type == 'DATASET' else '#f4a261' }}"
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  // Construire un mapping ref -> index pour les arêtes
+  const refToIndex = {};
+  nodes.forEach(n => { refToIndex[n.ref] = n.id; });
+
+  const edges = [
+    {% for edge in graph.edges %}
+    {
+      from: refToIndex["{{ edge.source }}"],
+      to: refToIndex["{{ edge.target }}"],
+      arrows: "to"
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  const container = document.getElementById("flow-graph");
+  if (nodes.length > 0) {
+    new vis.Network(
+      container,
+      { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) },
+      {
+        layout: { hierarchical: { direction: "LR", sortMethod: "directed", levelSeparation: 180 } },
+        physics: { enabled: false },
+        interaction: { hover: true, tooltipDelay: 100 },
+        edges: { smooth: { type: "curvedCW", roundness: 0.2 } }
+      }
+    );
+  } else {
+    container.innerHTML = '<p class="alert alert-warn">Aucun nœud dans ce flow.</p>';
+  }
+
+  // Filtre tableau
+  const nodeSearch = document.getElementById("nodeSearch");
+  if (nodeSearch) {
+    nodeSearch.addEventListener("input", () => {
+      const q = nodeSearch.value.toLowerCase();
+      document.querySelectorAll("#nodesTable tbody tr").forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
+      });
+    });
+  }
+</script>
+{% endblock %}
